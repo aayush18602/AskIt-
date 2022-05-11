@@ -1,0 +1,35 @@
+
+
+.q{
+    margin: 2% 19%;
+    padding: 7px;
+    padding-top: 0.8rem;
+    background-color: rgb(236, 235, 235);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    word-spacing: 3px;
+}
+
+.q .p{
+    margin: 0.8rem 0 0 0;
+    padding: 1rem 1.5rem;
+    background-color: white;
+
+}
+
+.q .p .ques{
+    font-size: 1.4rem;
+    line-height: 1.7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.q .p .ans{
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+ 
+{% block title %}
+QNA index Page
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h3 style="text-align:center">Ask it Out</h3>
+    <form action="{% url 'ask' %}" method="post" style="text-align:center">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary">Ask</button>
+    </form>
+{% for item in qna%}
+<div class="q form12">
+    <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' item.author.id %}" style="text-decoration: none;color: black;">@{{item.author}}</a></div>
+    <div class="p">
+        <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Posted on {{item.updated}}</div>
+        <div class="ques form--title"><a href="{% url 'sqd' item.id %}" >{{item.title}}</a></div><br>
+        <div class="btn-box" style="display: flex;">
+            <form action="{% url 'like' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Like | {{item.like_count}}</button>
+            </form>
+            <form action="{% url 'dislike' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="margin-left:10px;">Dislike | {{item.dislike_count}}</button>
+            </form>
+            <form action="{% url 'bookmark' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" style="margin-left:10px;">Bookmark</button>
+            </form>
+            {% if item.author == request.user %}
+            <form action="{% url 'deleteques' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="margin-left:10px;">Delete</button>
+            </form>
+            {% endif %}
+        </div>
+        <!-- <div class="ans">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi tenetur iure omnis totam exercitationem perferendis perspiciatis quidem minus nihil quia!</div> -->
+    </div>
+</div>
+    <!-- <div class="question-card">
+        <a href="{% url 'sqd' item.id %}" style="text-decoration: none;color: black;text-align: center;"><h1>{{item.title}}</h1></a>
+        <h6>Asked by : {{item.author}}</h6>
+        <b>{{item.updated}}</b>
+    </div>
+    <br> <br> -->
+{% endfor %}
+</div>
+
+{% endblock %}

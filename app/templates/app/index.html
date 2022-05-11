@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Ask It
+{% endblock %}
+
+{% block body %}
+<section
+        class="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start"
+      >
+        <div class="container">
+          <div class="d-sm-flex align-items-center justify-content-between">
+            <div>
+              <h2>Have A <span class="text-warning">Question? </span></h2>
+              <p class="lead my-4">
+                Congratulations! You are in the right space where you can
+                interact with various users who are using this platform and are
+              </p>
+              <button class="btn btn-primary btn-lg">
+                <a href="{% url 'account_signup'%}" style="color: white">Sign Up!</a>
+              </button>
+            </div>
+            <img class="img-fluid d-none d-sm-block" src="{% static 'img/img1.jpg' %}" style="margin-bottom: 40px; width: 40%;" />
+          </div>
+        </div>
+      </section>
+      <section class="p-5">
+        <div class="container">
+          <div class="row text-center">
+            <div class="col-md">
+              <div class="card bg-dark text-light mb-3">
+                <div class="card-body text-center">
+                  <div class="h1 mb-3">
+                    <i class="bi bi-laptop"></i>
+                  </div>
+                  <h3 class="card-title mb-3">User friendly</h3>
+                  <p class="card-text">
+                    The interface is very user friendly and can be accessed and
+                    understood at a glance!
+                  </p>
+                  <a href="#" class="btn btn-primary">Read More!</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="card bg-secondary text-light mb-3">
+                <div class="card-body text-center">
+                  <div class="h1 mb-3">
+                    <i class="bi bi-person-square"></i>
+                  </div>
+                  <h3 class="card-title mb-3">Our Reach</h3>
+                  <p class="card-text">
+                    We have helped over 100k people by getting them the answers
+                    they desired to get.
+                  </p>
+                  <a href="#" class="btn btn-primary">Read More!</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="card bg-dark text-light">
+                <div class="card-body text-center">
+                  <div class="h1 mb-3">
+                    <i class="bi bi-person-square"></i>
+                  </div>
+                  <h3 class="card-title mb-3">Trusted</h3>
+                  <p class="card-text">
+                    We have people as users who are well known for their
+                    knowledge in their respective fields
+                  </p>
+                  <a href="#" class="btn btn-primary">Read More!</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="learn" class="p-5">
+        <div class="container">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-md">
+              <img src="{% static 'img/img2.png' %}" class="img-fluid" alt="" />
+            </div>
+            <div class="col-md p-5">
+              <h2>Learn The Fundamentals</h2>
+              <p class="lead">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Similique deleniti possimus magnam corporis ratione facere!
+              </p>
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+                reiciendis eius autem eveniet mollitia, at asperiores suscipit
+                quae similique laboriosam iste minus placeat odit velit quos,
+                nulla architecto amet voluptates?
+              </p>
+              <a href="#" class="btn btn-primary mt-3">
+                <i class="bi bi-chevron-right"></i> Read More
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="learn" class="p-5 bg-dark text-light">
+        <div class="container">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-md p-5">
+              <h2>Fundamentals OF Communication</h2>
+              <p class="lead">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Similique deleniti possimus magnam corporis ratione facere!
+              </p>
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+                reiciendis eius autem eveniet mollitia, at asperiores suscipit
+                quae similique laboriosam iste minus placeat odit velit quos,
+                nulla architecto amet voluptates?
+              </p>
+              <a href="#" class="btn btn-primary mt-3">
+                <i class="bi bi-chevron-right"></i> Read More
+              </a>
+            </div>
+            <div class="col-md">
+              <img src="{% static 'img/img3.png' %}" class="img-fluid" alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="card-group">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Very Good!</h5>
+            <p class="card-text">
+              Thw website is really nice as I use it frequently to read answers
+              even to answer some of the questions!
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">By Mr.John</small>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Trusted People..</h5>
+            <p class="card-text">
+              Hands down one of a kind website where trusted sources answer your
+              question!
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">By Mr.Kevin</small>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Very Helpful!</h5>
+            <p class="card-text">
+              I was not in my hometown and I wanted a good hospital, on this
+              portal I found the correct one which was answered in minutes.
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">By Mr.Mike</small>
+          </div>
+        </div>
+      </div>
+{% endblock %}

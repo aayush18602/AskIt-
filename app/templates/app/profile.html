@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+ 
+{% block title %}
+Profile
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2 style="text-align:center;">Profile</h2> <br>
+    <div class="prof-details">
+        <h3>Name: {{user.username}}</h3>
+        <!-- <h3>Email: {{request.user.email}}</h3> -->
+    </div> <br> <br>
+    <div class="prof-body">
+        <!-- {% if request.user == user %} -->
+        <!-- <form action="" method="post">
+            {% csrf_token %}
+            <select name="prof" id="">
+                {% if mess %}
+                <option value="Q" selected>Questions Asked</option>
+                <option value="B">BookMarked</option>
+                {% else %}
+                <option value="Q" >Questions Asked</option>
+                <option value="B" selected>BookMarked</option>
+                {% endif %}
+            </select>
+            <button type="submit" class="btn btn-primary">Go</button>
+        </form> <br> -->
+        <!-- {% else %} -->
+        <!-- <h2 style="text-align:center">Questions Asked</h2> -->
+        <!-- {% endif %} -->
+        <div class="operations" style="display:flex;justify-content:space-evenly">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="Q" value="Q">
+                <button type="submit" class="oper-btn">Questions Asked</button>
+            </form>
+            <form action="" method="post"> 
+                {% csrf_token %}
+                <input type="hidden" name="Q" value="A">
+                <button type="submit" class="oper-btn">Questions Answered</button>
+            </form>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="Q" value="B">
+                <button type="submit" class="oper-btn">Questions Bookmared</button>
+            </form>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="Q" value="C">
+                <button type="submit" class="oper-btn">Questions where Commennted</button>
+            </form>
+        </div>
+        {% for ques in allques %}
+        <div class="q">
+            <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' ques.author.id %}" style="text-decoration: none;color: black;">@{{ques.author}}</a></div>
+            <div class="p">
+                <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Posted on {{ques.updated}}</div>
+                <div class="ques"><a href="{% url 'sqd' ques.id %}">{{ques.title}}</a></div><br>
+                <div class="btn-box" style="display: flex;">
+                    <form action="{% url 'like' ques.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Like | {{ques.like_count}}</button>
+                    </form>
+                    <form action="{% url 'dislike' ques.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="margin-left:10px;">Dislike | {{ques.dislike_count}}</button>
+                    </form>
+                    {% if ques.author == request.user %}
+                    <form action="{% url 'deleteques' ques.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="margin-left:10px;">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

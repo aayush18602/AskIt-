@@ -1,0 +1,196 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+
+<!-- <div class="container mt-5">
+    <div class="col-md-5" style="border: 1px solid black; margin: 10px auto; background-color: rgb(204, 204, 204);border-radius: 10px;">
+        <div class="col-md-10" style="margin: 20px auto;">
+            <div class="row mt-3">
+                <h1 style="color: white; text-align: center;font-weight: bolder;">SIGN-IN</h1>
+                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    <div class="user-data d-flex justify-content-center m-3 {% if form.username.errors %}has-error{% endif %}">
+                        {{form.username}}
+                    </div>
+                    {% if form.username.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    <div class="user-data d-flex justify-content-center m-3 {% if form.email.errors %}has-error{% endif %}">
+                        {{form.email}}
+                    </div>
+                    {% if form.email.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    <div class="user-data d-flex justify-content-center m-3 {% if form.password1.errors %}has-error{% endif %}">
+                        {{form.password1}}
+                    </div>
+                    {% if form.password1.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    <div class="user-data d-flex justify-content-center m-3 {% if form.password2.errors %}has-error{% endif %}">
+                        {{form.password2}}
+                    </div>
+                    {% if form.password2.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+                    <div class="m-4 submitbut">
+                        <input type="submit" value="Sign-in">
+                    </div>
+                    <div class="m-2">
+                        <a class="button secondaryAction" href="{% url 'account_login' %}" style="text-decoration: none; color: white; margin-left: 10px;">{% trans "Already have a account?" %}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="container">
+    <div class="myCard">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="myLeftCtn"> 
+                    <form class="myForm text-center" method="post" action="{% url 'account_signup' %}">
+                        <header>Create new account</header>
+                        {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                        <div class="form-group">
+                            <i class="fas fa-user"></i>
+                            <!-- <input class="myInput" type="text" placeholder="Username" id="username" required>  -->
+                            {{form.username}}
+                        </div>
+                        {% if form.username.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+
+                        <div class="form-group">
+                            <i class="fas fa-envelope"></i>
+                            <!-- <input class="myInput" placeholder="Email" type="text" id="email" required>  -->
+                            {{form.email}}
+                        </div>
+                        {% if form.email.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+
+                        <div class="form-group">
+                            <i class="fas fa-lock"></i>
+                            <!-- <input class="myInput" type="password" id="password" placeholder="Password" required>  -->
+                            {{form.password1}}
+                        </div>
+                        {% if form.password1.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <!-- <input class="myInput" type="password" id="password" placeholder="Password" required>  -->
+                        {{form.password2}}
+                    </div>
+                    {% if form.password2.errors %}
+                        <div class="alert alert-danger">
+                        <ul class="alert-message">
+                            {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+                    {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+                       
+
+                        <input type="submit" class="butt" value="CREATE ACCOUNT">
+                        <div class="m-2">
+                            <a class="button secondaryAction" href="{% url 'account_login' %}" style="text-decoration: none; color: black; margin-left: 10px;">{% trans "Already have a account?" %}</a>
+                        </div>
+                  
+                        
+                       
+                        
+                        
+
+                        <!-- <div class="col-md-12"> <a class="btn btn-lg btn-google btn-block text-uppercase btn-outline" href="#"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Signup Using Google</a> </div> -->
+                        
+                    </form>
+                </div>
+            </div> 
+            <div class="col-md-6">
+                <div class="myRightCtn">
+                        <div class="box"><header>Welcome!</header>
+                        
+                        <p>We welcome you to our ASK IT!</p>
+                            
+                        </div>
+                            
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

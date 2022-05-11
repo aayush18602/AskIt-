@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+ 
+{% block title %}
+QNA index Page
+{% endblock %}
+
+{% block body %}
+<form action="" method="post" style="text-align:center">
+    {% csrf_token %}
+    <input type="hidden" name="hidval" value="1">
+    {{ansform.media}}
+    {{ansform.as_p}}
+    <button type="submit" class="btn btn-primary">Edit</button>
+</form>
+{% endblock %}
