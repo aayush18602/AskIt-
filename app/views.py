@@ -5,6 +5,7 @@ from .forms import QuestionForm,AnswerForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from simple_search import search_filter
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
@@ -62,6 +63,9 @@ def ansadd(request,no):
     if request.method == 'POST':
         getques = Question.objects.filter(id=no).first()
         ansobj = Answer()
+        if request.POST['ans'] == "":
+            messages.error(request,'Cannot add empty answer')
+            return redirect(sqd,num=no)
         ansobj.ans = request.POST['ans']
         ansobj.ans_toques = getques
         ansobj.ans_askedby = request.user

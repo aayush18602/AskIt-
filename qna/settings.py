@@ -90,8 +90,14 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger'
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS= True
+EMAIL_HOST_USER = 'aayushpandey18602@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EM_18602_PS')
 ACCOUNT_EMAIL_VERIFICATION = "none"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 WSGI_APPLICATION = 'qna.wsgi.application'
 
