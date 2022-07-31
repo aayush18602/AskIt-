@@ -34,126 +34,35 @@ SQD
     {{mess}}
     
     {% for sing in ans %}
-    <!-- <div class="answer-card" style="border: 5px solid black;padding: 20px;margin: 20px 0;">
-        <h4><a href="#" style="text-decoration: none;color: black;">{{sing.ans_askedby}}</a></h4>  
-        {% if request.user == sing.ans_askedby %}
-        <form action="{% url 'editans' ques.id sing.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Edit">
-        </form>
-        <form action="{% url 'deleteans' ques.id sing.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Delete">
-        </form>
-        {% endif %}
-        {{sing.ans|safe}}
-     <br>
-    </div> -->
-    <div class="q" style="margin: 5% 10%;">
-        <div class="ans-boxxx" style="width:80%;margin: 20px auto;">
-            <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' sing.ans_askedby.id %}" style="text-decoration: none;color: black;">@{{sing.ans_askedby}}</a>
-            </div>
-        <div class="p">
-            <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Answered {{sing.created}}</div>
-            <!-- <br> -->
-            <div class="ans">{{sing.ans|safe}}</div> 
-            <div class="edit-box" style="display:flex;">
-                {% if request.user == sing.ans_askedby %}
-                    <form action="{% url 'editans' ques.id sing.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary" style="margin:15px 15px;">Edit</button>
-                    </form>
-                    <form action="{% url 'deleteans' ques.id sing.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" style="margin:15px 15px;">Delete</button>
-                    </form>
-                    {% endif %}
-                </div> 
-        </div>
-
-           
-         
-    <div class="reply-body" style="margin-bottom: 10px;">
-        <form action="{% url 'addreply' ques.id sing.id %}" method="post">
-            {% csrf_token %}
-            Comment : <input type="text" name="reply" id="" style="border-radius: 10px;border: 1px solid black;width:60%;margin-top:15px;">
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-    </div>
-
-    {% for reply in all_reply %}
-    
-        {% if reply.ans_ref == sing %}
-            <!-- <div class="answer-card" style="border: 1px solid red; padding: 10px;">
-            {{reply.content}}  by {{reply.user}} id: {{reply.id}} <br>
-            Reply:
-            <form action="{% url 'add_reply' ques.id sing.id reply.id%}" method="post">
-                {% csrf_token %}
-                <input type="text" name="get_reply" id="">
-                <input type="submit" value="Reply">
-            </form>
-            <div class="all_reply" style="margin-left: 30px;">
-                {{reply.id}}
-                {% for rep in replies %}
-                {% if rep.ans_ref == sing %}
-                
-                    {% if rep.comment_ref == reply %}
-                        <div style="border: 0px solid green; margin: 5px;">{{rep.content}}</div>
-                    {% endif %}
-                {% endif %}
-                {% endfor %}
-            </div>
-            </div> -->
-            <div class="ans-boxxx" style="width:80%;margin: 20px auto;">
-            <div class="p">
-                <div style="margin-left: 1%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' reply.user.id %}" style="text-decoration: none;color: black;">@{{reply.user}}</a>
+        <div class="q" style="margin: 3% 3%;">
+            <div class="ans-boxxx" style="width:80%;margin: auto">
+                <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' sing.ans_askedby.id %}" style="text-decoration: none;color: black;">@{{sing.ans_askedby}}</a>
                 </div>
-                <!-- <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Answered {{sing.created}}</div>
-                <br> -->
-                <div class="ans">{{reply.content}}</div> 
-                {% if reply.user == request.user %}
-                <form action="{% url 'deletecomment' reply.id ques.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                {% endif %}
-                
-            </div>
-            <form action="{% url 'add_reply' ques.id sing.id reply.id%}" method="post">
-                {% csrf_token %}
-                Reply : <input type="text" name="get_reply" id="" style="border-radius: 10px;border: 1px solid black;width:60%;margin-top:15px;">
-                <button type="submit" class="btn btn-primary">Reply</button>
-            </form>
-            {% for rep in replies %}
-                {% if rep.ans_ref == sing %}
-                
-                    {% if rep.comment_ref == reply %}
-                        <!-- <div style="border: 1px solid green; margin: 5px;">{{rep.content}}</div> -->
-                        <div class="ans-boxxx" style="width:80%;margin: 20px auto;">
-                        <div class="p">
-                            <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' rep.user.id %}" style="text-decoration: none;color: black;">@{{rep.user}}</a>
-                            </div>
-                            <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;margin-left: 10px;">Replied to {{reply.user}}</div>
-                            
-                            <div class="ans">{{rep.content}}</div> 
-                            {% if rep.user == request.user %}
-                            <form action="{% url 'deletereply' rep.id ques.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                            {% endif %}
-                        </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-                {% endfor %}
+            <div class="p">
+                <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Answered {{sing.created}}</div>
+                <div class="ans">{{sing.ans|safe}}</div> 
+                <div class="edit-box" style="display:flex;">
+                    {% if request.user == sing.ans_askedby %}
+                        <form action="{% url 'editans' ques.id sing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary" style="margin:15px 15px;">Edit</button>
+                        </form>
+                        <form action="{% url 'deleteans' ques.id sing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" style="margin:15px 15px;">Delete</button>
+                        </form>
+                        {% endif %}
+                        <form action="{% url 'display_ans' ques.id sing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary" style="margin:15px 15px;">Comments</button>
+                        </form>
+                    </div> 
             </div>
 
-        {% endif %}
-   
-    {% endfor %} 
-</div>
-</div>
+            
+
+        </div>
+        </div>
     {% endfor %}
 
     </div>

@@ -2,6 +2,7 @@ from turtle import mode
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
+from mptt.models import MPTTModel,TreeForeignKey
 
 
 # Create your models here.
@@ -29,25 +30,19 @@ class Answer(models.Model):
     def __str__(self):
         return f"Answer :- {self.id} :- {self.ans_toques} by {self.ans_askedby}"
 
+class Comment(MPTTModel):
+    content = models.CharField(max_length=100)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_commented")
+    c_ans = models.ForeignKey(Answer,on_delete=models.CASCADE,related_name="get_comments")
+    parent = TreeForeignKey('self',on_delete=models.CASCADE,related_name='children',null=True,blank=True)
+    added = models.DateTimeField(auto_now_add=True)
 
-class Comment(models.Model):
-    content = models.TextField()
-    ans_ref = models.ForeignKey(Answer,related_name="getallreplies",on_delete=models.CASCADE)
-    user = models.ForeignKey(User,related_name="getalluser_toreply",on_delete=models.CASCADE)
-    ques_ref = models.ForeignKey(Question,related_name="reply_toques",on_delete=models.CASCADE,null=True)
-
+    class MPTTMeta:
+        order_insertion_by = ['added']
     def __str__(self):
-        return f"Comment :- {self.user} to answer id: {self.ans_ref.id}"
+        return f"Comment by {self.user.id}"
 
-class Reply(models.Model):
-    content = models.TextField()
-    ans_ref = models.ForeignKey(Answer,related_name="getallans",on_delete=models.CASCADE)
-    user = models.ForeignKey(User,related_name="getall_user_toreply",on_delete=models.CASCADE)
-    ques_ref = models.ForeignKey(Question,related_name="to_which_ques",on_delete=models.CASCADE,null=True)
-    comment_ref = models.ForeignKey(Comment,related_name="reply_towhich_comment",on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Reply to {self.ques_ref.id}, Answer: {self.ans_ref.id} Comment {self.comment_ref.id}"
     
     
 class QuesLikes(models.Model):
@@ -64,3 +59,7 @@ class BookMark(models.Model):
 
     def __str__(self):
         return f"{self.ques.id} :- {self.user}"
+
+
+class Moderator(models.Model):
+    answer = models.ForeignKey(Answer,related_name="mod_ans",on_delete=models.CASCADE)

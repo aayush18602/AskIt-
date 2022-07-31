@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+ 
+{% block title %}
+Comments and Replies
+{% endblock %}
+
+{% block body %}
+<style>
+    .pq{
+        margin:10px;  
+        background-color:white;
+        padding:4px 0px 5px 15px;
+        /* border:1px solid black; */
+    }
+    .errorlist{
+        display:none;
+    }
+</style>
+<div class="container">
+    <h1 style="text-align: center;">{{ques.title}}</h1> 
+    <br><br>
+    <div class="q" style="margin: 3% 3%;">
+        <div class="ans-boxxx" style="width:80%;margin: auto">
+            <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' sing.ans_askedby.id %}" style="text-decoration: none;color: black;">@{{sing.ans_askedby}}</a>
+            </div>
+        <div class="p">
+            <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Answered {{sing.created}}</div>
+            <div class="ans">{{sing.ans|safe}}</div> 
+            <div class="edit-box" style="display:flex;">
+                {% if request.user == sing.ans_askedby %}
+                    <form action="{% url 'editans' ques.id sing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" style="margin:15px 15px;">Edit</button>
+                    </form>
+                    <form action="{% url 'deleteans' ques.id sing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="margin:15px 15px;">Delete</button>
+                    </form>
+                    {% endif %}
+                </div> 
+        </div>
+        <form action="" method="post" style="display:flex;margin-top: 15px;">
+            {% csrf_token %}
+            {{comment_form.as_p}}
+            <button type="submit" class="btn btn-primary" style="margin-left:20px">Add</button>
+        </form>
+        
+        {% load mptt_tags %}
+        <div class="comments">
+            {% recursetree comments %}
+            <div class="pq" style="margin-left:5%;">
+                <div style="text-shadow: 2px 1px white;"><a href="{% url 'profile' node.user.id %}" style="text-decoration: none;color: black;" id="user{{node.id}}">@{{node.user.username}}</a>
+                </div>
+                <div>{{node.content}}</div> <br>
+                <div class="btn-boxx" style="display:flex" id="{{node.id}}">
+                    {% if node.user == request.user %}
+                    <form action="{% url 'delete_comment' ques.id sing.id node.id %}" method="POST">
+                        {% csrf_token %}
+                    <button type="submit" style="margin-top:-15px;"class="btn btn-danger">Delete</button> 
+                    </form>
+                    {% endif %}
+                    {% if node.level < 5 %}
+                    <button type="button" style="margin-top:-15px;margin-left:15px;" onclick="func({{node.id}})" class="btn btn-primary">Reply</button> 
+                    {% endif %}
+                </div>
+            </div>
+                {% if not node.is_leaf_node %}
+                    <div style="margin-left:5%;">
+                        {{children}}
+                    </div>
+                {% endif %}
+            
+            {% endrecursetree %}
+        </div>
+
+        
+
+    </div>
+    </div>
+    
+</div>
+<script>
+    function func(id){
+        if(document.contains(document.getElementById('newForm'))){
+            document.getElementById('newForm').remove()
+        }
+        const token = '{% csrf_token %}'
+        const a = document.getElementById(id);
+        let form = '<form action="" method="post" id="newForm" style="display:flex;margin-top:7px;"> \
+        '+ token +'\
+        <p> \
+        </p>\
+        <select name="parent" class="d-none" id="id_parent">\
+        <option value="' + id +'" selected="' + id + '"></option>\
+        </select>\
+        <p>\
+        <label for="id_content">Reply:</label> \
+        <input type="text" name="content" style="border-radius:10px;border:2px solid black;" maxlength="100" required="" id="id_content">\
+        </p>\
+        <button type="submit" class="btn btn-primary" style="margin-left:20px">Add</button>\
+        </form>'
+        a.insertAdjacentHTML('afterend',form);
+    }
+</script>
+{% endblock %}

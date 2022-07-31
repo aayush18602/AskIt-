@@ -1,12 +1,16 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from .models import Question,Answer,Comment,Reply,QuesLikes,QuesDisLikes,BookMark
-from .forms import QuestionForm,AnswerForm
+from .models import Question,Answer,QuesLikes,QuesDisLikes,BookMark,Moderator,Comment
+from .forms import QuestionForm,AnswerForm,CommentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from simple_search import search_filter
 from django.contrib import messages
+from profanity_filter import ProfanityFilter
+from bs4 import BeautifulSoup
 # Create your views here.
+
+pf = ProfanityFilter()
 
 def index(request):
     return render(request,'app/index.html')
@@ -35,15 +39,10 @@ def sqd(request,num):
     if ques is None:
         print("Not found")
     ans = ques.ans_toques.all()
-    all_reply = ques.reply_toques.all()
-    all_replies = ques.to_which_ques.all()
-    print(all_replies)
     return render(request,"app/sqd.html",{
         "ques":ques,
         "ans":ans,
         "ansfield":ansfield,
-        "all_reply":all_reply,
-        "replies":all_replies
     })
 
 @login_required(login_url='/accounts/login')
@@ -66,10 +65,29 @@ def ansadd(request,no):
         if request.POST['ans'] == "":
             messages.error(request,'Cannot add empty answer')
             return redirect(sqd,num=no)
-        ansobj.ans = request.POST['ans']
+        raw_ans = request.POST['ans']
+        # print(raw_ans)
+        soup = BeautifulSoup(raw_ans,features="html.parser")
+        text = soup.get_text()
+        lines = (line.strip() for line in text.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        text = '\n'.join(chunk for chunk in chunks if chunk)
+        
         ansobj.ans_toques = getques
         ansobj.ans_askedby = request.user
-        ansobj.save()
+        if pf.is_profane(text):
+            print(1)
+            ansobj.ans = raw_ans
+            mod_obj = Moderator()
+            ansobj.save()
+            mod_obj.answer = ansobj
+            mod_obj.save()
+            messages.error(request,'Your answer contains some harmful words!! We are looking into it')
+            return redirect(sqd,num=no)
+        else:
+            print(2)
+            ansobj.ans = raw_ans
+            ansobj.save()
         return redirect(sqd,num=no)
 
 @login_required(login_url='/accounts/login')
@@ -78,9 +96,27 @@ def editans(request,num,no):
     if request.user != ansfield.ans_askedby:
         return redirect(index)
     if(request.POST.get('hidval')):
-        ansfield.ans = request.POST['ans']
-        ansfield.save()
-        return redirect(sqd,num=num)
+        raw_ans = request.POST['ans']
+        soup = BeautifulSoup(raw_ans,features="html.parser")
+        text = soup.get_text()
+        lines = (line.strip() for line in text.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        text = '\n'.join(chunk for chunk in chunks if chunk)
+        check = Moderator.objects.filter(answer=ansfield).first()
+        if pf.is_profane(text):
+            ansfield.ans = raw_ans
+            ansfield.save()
+            if check is None:
+                prof = Moderator(answer=ansfield)
+                prof.save()
+                messages.error(request,'Your answer contains some harmful words!! We are looking into it')
+            return redirect(sqd,num=num)
+        else:
+            ansfield.ans = raw_ans
+            ansfield.save()
+            if check is not None:
+                check.delete()
+            return redirect(sqd,num=num)
     ansform = AnswerForm(instance=ansfield)
     return render(request,"app/editans.html",{
         "ansform":ansform
@@ -96,34 +132,8 @@ def deleteans(request,num,no):
     ansfield.delete()
     return redirect(sqd,num=num)
 
-@login_required(login_url='/accounts/login')
-def addreply(request,q_id,ans_id):
-    if request.method == "POST":
-        comm_obj = Comment()
-        comm_obj.content = request.POST['reply']
-        ans = Answer.objects.get(id=ans_id)
-        ques = Question.objects.get(id=q_id)
-        comm_obj.ans_ref = ans
-        comm_obj.ques_ref = ques
-        comm_obj.user = request.user
-        comm_obj.save()
-        return redirect(sqd,num=q_id)
 
 
-@login_required(login_url='/accounts/login')
-def add_reply(request,q_id,ans_id,c_id):
-    if request.method == "POST":
-        rep_obj = Reply()
-        ans = Answer.objects.get(id=ans_id)
-        ques = Question.objects.get(id=q_id)
-        comm = Comment.objects.get(id=c_id)
-        rep_obj.content = request.POST['get_reply']
-        rep_obj.ans_ref = ans
-        rep_obj.ques_ref = ques
-        rep_obj.user = request.user
-        rep_obj.comment_ref = comm
-        rep_obj.save()
-        return redirect(sqd,num=q_id)
 
 @login_required(login_url='/accounts/login')
 def queslike(request,id):
@@ -172,17 +182,8 @@ def deleteques(request,id):
         check.delete()
         return redirect(feed)
 
-def deletecomments(request,id,no):
-    if request.method == 'POST':
-        check = Comment.objects.get(id=id)
-        check.delete()
-        return redirect(sqd,num=no)
 
-def deletereply(request,id,no):
-    if request.method == 'POST':
-        check = Reply.objects.get(id=id)
-        check.delete()
-        return redirect(sqd,num=no)
+
 
 
 def bookmark(request,id):
@@ -206,12 +207,7 @@ def profile(request,id):
             allques = []
             test = user.get_bookmarks.all()
             for x in test:
-                allques.append(Question.objects.get(id=x.ques.id))
-        elif method == 'C':
-            allques = []
-            test = user.getalluser_toreply.all().values('ques_ref').distinct()
-            for x in test:
-                allques.append(Question.objects.get(id=x['ques_ref'])) 
+                allques.append(Question.objects.get(id=x.ques.id)) 
         elif method == 'A':
             allques = []
             test = user.quesasked.all().values('ans_toques').distinct()
@@ -233,3 +229,49 @@ def profile(request,id):
         "allques": allques,
         "mess":mess
     })
+
+@login_required(login_url='/accounts/login')
+def moderator(request,del_st=None):
+    if not request.user.is_superuser:
+        return redirect(index)
+    if request.method == 'POST':
+        # print("Hiiii")
+        st = request.GET['message']
+        if st == 'delete':
+            Answer.objects.filter(id=del_st).delete()
+        elif st == 'remove':
+            Moderator.objects.filter(id=del_st).delete()
+        return redirect(moderator,del_st=0)
+    ans = Moderator.objects.all()
+    return render(request,'app/moderator.html',{
+        "ans":ans
+    })
+
+@login_required(login_url='/accounts/login')
+def display_ans(request,q_id,ans_id):
+    ques = Question.objects.get(id=q_id)
+    ans = Answer.objects.get(id=ans_id)
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            user_comment = comment_form.save(commit=False)
+            user_comment.user = request.user
+            user_comment.c_ans = ans  
+            user_comment.save()
+            return redirect(display_ans,q_id=q_id,ans_id=ans_id)
+    else:
+        comment_form = CommentForm()
+    comments = ans.get_comments.filter()
+    return render(request,'app/answer.html',{
+        "ques":ques,
+        "sing":ans,
+        "comments":comments,
+        "comment_form":comment_form
+    })
+
+@login_required(login_url='/accounts/login')
+def deletecomments(request,q_id,ans_id,c_id):
+    if request.method == 'POST':
+        check = Comment.objects.get(id=c_id).delete()
+        return redirect(display_ans,q_id,ans_id)
+    return redirect(index)

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+ 
+{% block title %}
+Moderator
+{% endblock %}
+
+{% block body %}
+<!-- <h1>Moderator</h1> -->
+<div class="container">
+    {% for sing in ans %}
+    <div class="q" style="margin: 5% 10%;">
+        <div class="ans-boxxx" style="width:80%;margin: 20px auto;">
+            <div style="margin-left: 4%;text-shadow: 2px 1px white;font-size: 1.2rem;"><a href="{% url 'profile' sing.answer.ans_askedby.id %}" style="text-decoration: none;color: black;">@{{sing.answer.ans_askedby}}</a>
+            </div>
+            <div class="p">
+                <div  style="color: rgba(0, 0, 0, 0.596);font-size: 1rem;font-weight: 400;">Answered {{sing.answer.created}}</div>
+                <div class="ans">{{sing.answer.ans|safe}}</div> 
+                <form method="post" action="/moderator/{{sing.answer.id}}?message=delete">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="margin:15px 15px;">Delete</button>
+                </form>
+                <form method="post" action="/moderator/{{sing.id}}?message=remove">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" style="margin:15px 15px;">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

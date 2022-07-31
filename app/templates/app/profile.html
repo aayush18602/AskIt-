@@ -46,11 +46,6 @@ Profile
                 <input type="hidden" name="Q" value="B">
                 <button type="submit" class="oper-btn">Questions Bookmared</button>
             </form>
-            <form action="" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="Q" value="C">
-                <button type="submit" class="oper-btn">Questions where Commennted</button>
-            </form>
         </div>
         {% for ques in allques %}
         <div class="q">
